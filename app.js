@@ -1,6 +1,14 @@
 const express = require('express')
 const app = express()
 
+// Connect with database
+const { createConnection } = require('./src/database/db')
+
+createConnection().then(time=>{
+	console.log("Connection time: " + time.connectionTime + "ms")
+
+}).catch(err=>{ console.log(err) })
+
 app.get('/', (req, res)=>{
 	return res.send(`
 		<form action="/login" method="post">
@@ -9,6 +17,10 @@ app.get('/', (req, res)=>{
 			<input type="submit">
 		</form>
 	`)
+})
+
+app.post('/login', (req, res)=>{
+	return res.send({okay: 'okay'})
 })
 
 app.listen(8000)
