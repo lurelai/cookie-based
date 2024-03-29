@@ -1,7 +1,10 @@
+const { readFileSync } = require('fs')
+const { Pool } = require('pg')
+const { join } = require('path')
 const dotenv = require('dotenv')
+
 dotenv.config()
 
-const { Pool } = require('pg')
 
 const pool = new Pool({
 	host:		process.env.DB_HOST,
@@ -12,6 +15,8 @@ const pool = new Pool({
 
 })
 
+// create tables
+pool.query(readFileSync(join(__dirname, 'create-table.sql'), "ASCII"))
 
 const createConnection = async ()=>{
 	try{
@@ -27,6 +32,12 @@ const createConnection = async ()=>{
 	}
 }
 
+const query = async (queryString, params)=>{
+	const result = await pool.query(queryString, params)
 
-module.exports = { createConnection }
+	return result
+}
+
+
+module.exports = { createConnection, query }
 

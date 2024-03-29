@@ -4,9 +4,8 @@ const app = express()
 // Connect with database
 const { createConnection } = require('./src/database/db')
 
-createConnection().then(time=>{
+createConnection().then(async (time)=>{
 	console.log("Connection time: " + time.connectionTime + "ms")
-
 }).catch(err=>{ console.log(err) })
 
 app.get('/', (req, res)=>{
