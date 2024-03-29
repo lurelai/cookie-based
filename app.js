@@ -13,6 +13,9 @@ createConnection().then(async (time)=>{
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
+app.set('trust proxy', true)
+
+
 app.get('/', (req, res)=>{
 	return res.send(`
 		<form action="/login" method="post">
@@ -23,12 +26,18 @@ app.get('/', (req, res)=>{
 	`)
 })
 
-app.post('/login', (req, res)=>{
+app.post('/login', async (req, res)=>{
 	// Possibles [{id: 1, password: mama}, {id: 2, password: mia}, {id: 3, password: figaro}]
 	const { id, password } = req.body
 
 	if((id === "1" && password === "mama") || (id === "2" && password === "mia") || (id === "3" && password === "figaro")){
-		query("INSERT INTO sessions(user_id, user_session) VALUES($1, $2)", [id, randomUUID()])
+		const ip = req.ip
+		const userAgent = req.header('user-agent')
+		const session = randomUUID()
+
+		const queryString = "INSERT INTO sessions(user_agent, user_id, user_session, user_ip) VALUES ($1, $2, $3, $4)"
+		
+		await query(queryString, [userAgent, id, session, ip])
 
 		return res.send("logged")
 	}
