@@ -11,5 +11,5 @@ Just 5 things to pay attention:
 
 
 # Next move 
-Learn more about ips, I need to learn how to play along with it
+Learn more about ips, I need to learn how to play along with it (I really need to learn docker-compose too)
 
