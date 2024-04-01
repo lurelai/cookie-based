@@ -1,0 +1,26 @@
+services:
+  web:
+    image: "node:21.6.2"
+    working_dir: "/usr/app"
+    command: "node app.js"
+    volumes:
+      - "$PWD:/usr/app"
+    container_name: "web"
+    ports:
+      - "8080:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: "postgres:16.2"
+    environment:
+      - "POSTGRES_PASSWORD=root"
+      - "POSTGRES_DB=teste"
+    container_name: "database"
+    healthcheck:
+      test: ["CMD", "psql", "-h", "localhost", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
